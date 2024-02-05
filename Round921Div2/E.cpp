@@ -39,10 +39,13 @@ struct Tree {
     void updateCoast() { coast = sum * lazyValue; }
     void replaceValue(int newValue) {
         lazyValue = newValue;
+        updateCoast();
     }
     void subtractSum(int dec) {
-        sum -= (right - left + 1) * dec;
+        // warning：wa2 爆int
+        sum -= 1ll * (right - left + 1) * dec;
         lazyDelta += dec;
+        updateCoast();
     }
 } tree[maxn << 2];
 
@@ -50,31 +53,25 @@ void pushUp(int root) {
     tree[root].coast = tree[root << 1].coast + tree[root << 1 | 1].coast;
     tree[root].sum = tree[root << 1].sum + tree[root << 1 | 1].sum;
     // 只有两个子节点的lazyValue相同时，root的lazyValue才有意义
-    tree[root].lazyValue = tree[root << 1].lazyValue
-                           == tree[root << 1 | 1].lazyValue ?
-                           tree[root << 1].lazyValue : 0;
+    tree[root].lazyValue =
+        tree[root << 1].lazyValue == tree[root << 1 | 1].lazyValue
+            ? tree[root << 1].lazyValue
+            : 0;
 }
 void pushDown(int root) {
     if (tree[root].lazyDelta) {
         tree[root << 1].subtractSum(tree[root].lazyDelta);
         tree[root << 1 | 1].subtractSum(tree[root].lazyDelta);
-        tree[root << 1].lazyDelta += tree[root].lazyDelta;
-        tree[root << 1 | 1].lazyDelta += tree[root].lazyDelta;
         tree[root].lazyDelta = 0;
     }
     if (tree[root].lazyValue) {
-        tree[root << 1].coast =
-            tree[root << 1].coast / tree[root << 1].lazyValue
-             * tree[root].lazyValue;
-        tree[root << 1 | 1].coast =
-            tree[root << 1 | 1].coast / tree[root << 1 | 1].lazyValue
-            * tree[root].lazyValue;
-        tree[root << 1].lazyValue =
-            tree[root << 1 | 1].lazyValue = tree[root].lazyValue;
+        tree[root << 1].replaceValue(tree[root].lazyValue);
+        tree[root << 1 | 1].replaceValue(tree[root].lazyValue);
     }
 }
 int getLeftValue(int position) {
-    if (position == 1) return 0;
+    if (position == 1)
+        return 0;
     auto it = harbourSet.lower_bound(Harbour(position, 0));
     --it;
     return it->value;
@@ -98,11 +95,11 @@ void build(int root, int left, int right) {
     pushUp(root);
 }
 void updateSum(int root,
-            int left,
-            int right,
-            int queryLeft,
-            int queryRight,
-            int delta) {
+               int left,
+               int right,
+               int queryLeft,
+               int queryRight,
+               int delta) {
     int middle = (left + right) / 2;
     if (left == queryLeft && right == queryRight) {
         tree[root].subtractSum(delta);
@@ -133,13 +130,15 @@ void updateValue(int root,
     pushDown(root);
     if (queryLeft <= middle)
         updateValue(root << 1, left, middle, queryLeft,
-                  std::min(middle, queryRight), newValue);
+                    std::min(middle, queryRight), newValue);
     if (queryRight > middle)
         updateValue(root << 1 | 1, middle + 1, right,
-                  std::max(middle + 1, queryLeft), queryRight, newValue);
+                    std::max(middle + 1, queryLeft), queryRight, newValue);
     pushUp(root);
 }
-int query(int root, int left, int right, int queryLeft, int queryRight) {
+
+// warning: int -> ll
+ll query(int root, int left, int right, int queryLeft, int queryRight) {
     int middle = (left + right) / 2;
     if (left == queryLeft && right == queryRight)
         return tree[root].coast;
