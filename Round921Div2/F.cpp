@@ -17,6 +17,7 @@ const double eps = 1e-10;
 int N;
 ll quickPow(ll x, ll y) {
     ll res = 1;
+    x = (x % mod + mod) % mod;
     while (y) {
         if (y & 1)
             res *= x, res %= mod;
@@ -25,9 +26,12 @@ ll quickPow(ll x, ll y) {
     }
     return res;
 }
+ll inv(ll x) {
+    return quickPow(x, mod - 2);
+}
 int main() {
-    freopen("intput.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    // freopen("input.txt", "r", stdin);
+    // freopen("output.txt", "w", stdout);
     std::ios::sync_with_stdio(false);
     std::cin.tie(NULL);
 
@@ -35,14 +39,21 @@ int main() {
     std::cin >> T;
     while (T--) {
         std::cin >> N;
-        ll inv = (1 - quickPow(2, N - 1) + mod) % mod;
-        inv = quickPow(inv, mod - 2);
+        ll bottom = inv((1 - quickPow(2, N - 1) + mod) % mod);
+        ll A, B;
         if (N % 2) {
-            std::cout << (quickPow(2, N / 2) + 1) % mod * inv % mod << '\n';
+            A = (-quickPow(2, N / 2 + 1) - 1 - quickPow(2, N - 1) + mod * 2) %
+                mod * bottom % mod;
+            B = (quickPow(2, N / 2) + 1) % mod * bottom % mod;
+
         } else {
-            std::cout << (mod - (quickPow(2, N / 2)) + 1) % mod * inv % mod
-                      << '\n';
+            A = (quickPow(2, N / 2) - 1 - quickPow(2, N - 1) + mod * 2) %
+                mod * bottom % mod;
+            B = (-quickPow(2, N / 2) + 1 + mod) % mod * bottom % mod;
         }
+        ll res =
+            (-B * inv(A * A % mod - 2 * B * B % mod) % mod + mod) % mod;
+        std::cout << res << '\n';
     }
 
     return 0;
