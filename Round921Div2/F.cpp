@@ -41,11 +41,15 @@ int main() {
         std::cin >> N;
         ll bottom = inv((1 - quickPow(2, N - 1) + mod) % mod);
         ll A, B;
-        if (N % 2) {
+        if (N == mod) {
+            // 当 N == mod 时，会导致bottom为0，这时要换一种算法。
+            bottom = inv((1 - quickPow(2, N / 2) + mod) % mod);
+            A = (1 - 2 * bottom) % mod;
+            B = bottom;
+        } else if (N % 2) {
             A = (-quickPow(2, N / 2 + 1) - 1 - quickPow(2, N - 1) + mod * 2) %
                 mod * bottom % mod;
             B = (quickPow(2, N / 2) + 1) % mod * bottom % mod;
-
         } else {
             A = (quickPow(2, N / 2) - 1 - quickPow(2, N - 1) + mod * 2) %
                 mod * bottom % mod;
