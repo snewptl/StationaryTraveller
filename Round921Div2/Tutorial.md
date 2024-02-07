@@ -4,7 +4,7 @@
 
 [题目](https://codeforces.com/contest/1925)
 
-[题解](http://snewptl.com/2024/02/07/Codeforces-Round921Div2/)
+[本人博客中的题解（推荐）](http://snewptl.com/2024/02/07/Codeforces-Round921Div2/)
 
 
 
