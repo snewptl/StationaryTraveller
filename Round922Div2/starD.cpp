@@ -15,12 +15,31 @@ const ll mod = 998244353;
 const int maxn = 2e5 + 5;
 const double eps = 1e-10;
 int n, a[maxn];
-ll check(ll x) {
-    std::set<pii> s;
+ll dp[maxn];
+bool check(ll limit) {
+    std::set<pli> s;
     s.insert({0, 0});
+    for (int i = 1; i <= n; ++i) dp[i] = 0;
+    ll segmentLength = 0;
+    int head = 0;
     for (int i = 1; i <= n; ++i) {
-        s.insert({})
+        dp[i] = s.begin()->first + a[i];
+        s.insert({dp[i], i});
+        segmentLength += a[i];
+        while (segmentLength > limit) {
+            segmentLength -= a[head];
+            if (head) 
+                s.erase({dp[head - 1], head - 1});
+            ++head;
+        }
     }
+    ll sum = 0;
+    for (int i = n; i >= 1; --i) {
+        if (dp[i] <= limit) return true;
+        sum += a[i];
+        if (sum > limit) return false;
+    }
+    return false;
 }
 ll dichotomy() {
     ll l = 0, r = 1e18, res = 1e18;
@@ -36,8 +55,8 @@ ll dichotomy() {
     return res;
 }
 int main() {
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    // freopen("input.txt", "r", stdin);
+    // freopen("output.txt", "w", stdout);
     std::ios::sync_with_stdio(false);
     std::cin.tie(NULL);
 
