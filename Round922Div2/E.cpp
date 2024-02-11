@@ -26,7 +26,6 @@ int askWith(int pos) {
         return -1;
 }
 void output() {
-    // if (n == 2) assert(false);
     std::cout << "! ";
     for (int i = 1; i <= n; ++i)
         std::cout << a[i] << ' ';
@@ -39,34 +38,8 @@ int randomSelect(std::vector<int> vec) {
 void setXEqualTo(int pos) {
     while (askWith(pos));
 }
-void bruteForce(std::vector<int> vec, int nearestKownPosition) {
-    int last = a[nearestKownPosition];
-    setXEqualTo(nearestKownPosition);
-    for (auto it : vec) {
-        a[it] = last;
-        for (int diff = askWith(it); diff; diff = askWith(it))
-            a[it] += diff;
-    }
-
-}
-/*
-记录nearestKownPosition 主要是为了尽量减少调用bruteForce时产生的询问次数。
-*/
-void solve(std::vector<int> vec, int min, int max, int nearestKownPosition) {
-    // 如果solve进行了至少一次调用，nearKownPosition就不可能为0，为0说明此时n小于等于10
-    // 如果n小于10，先强制走一遍solve的流程
-
-    // <<<<< 如果不注释掉这一段，会导致TLE，但是不清楚为什么。
-    // if (max - min + 1 <= 10 && nearestKownPosition) {
-    //     if (min > max)
-    //         return;
-    //     bruteForce(vec, nearestKownPosition);
-    //     return;
-    // }
-    // >>>>>
-    // <<<<<
+void solve(std::vector<int> vec, int min, int max) {
     if (min > max) return;
-    // >>>>>
     int pos = randomSelect(vec);
     setXEqualTo(pos);
     std::vector<int> BiggerVec, SmallerVec;
@@ -85,8 +58,8 @@ void solve(std::vector<int> vec, int min, int max, int nearestKownPosition) {
         }
     }
     a[pos] = max - cnt;
-    solve(SmallerVec, min, a[pos] - 1, pos);
-    solve(BiggerVec, a[pos] + 1, max, pos);
+    solve(SmallerVec, min, a[pos] - 1);
+    solve(BiggerVec, a[pos] + 1, max);
 }
 
 int main() {
@@ -105,7 +78,7 @@ int main() {
             vec.push_back(i);
         for (int i = 1; i <= n; ++i)
             a[i] = 0;
-        solve(vec, 1, n, 0);
+        solve(vec, 1, n);
         output();
     }
 
