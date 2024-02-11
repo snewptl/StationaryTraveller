@@ -11,19 +11,31 @@ typedef std::pair<ll, int> pli;
 typedef std::pair<ll, ll> pll;
 typedef double db;
 typedef long double ldb;
+const ll mod = 998244353;
 const int maxn = 2e5 + 5;
+const double eps = 1e-10;
 int a[maxn], n;
+int x, b[maxn];
 int askWith(int pos) {
     std::cout << "? " << pos << '\n';
     std::cout.flush();
     char ch[2];
-    std::cin >> ch;
-    if (ch[0] == '>')
-        return 1;
-    else if (ch[0] == '=')
+    // std::cin >> ch;
+    // if (ch[0] == '>')
+    //     return 1;
+    // else if (ch[0] == '=')
+    //     return 0;
+    // else
+    //     return -1;
+    // <<<<< debug
+    if (x == b[pos])
         return 0;
-    else
-        return -1;
+    else {
+        int diff = (b[pos] - x) / std::abs(x - b[pos]);
+        x += diff;
+        return diff;
+    }
+    // debug >>>>>
 }
 void output() {
     std::cout << "! ";
@@ -34,18 +46,18 @@ void output() {
 }
 
 int randomSelect(std::vector<int> vec) {
-    return vec[rand() % vec.size()];
+    // return vec[rand() % vec.size()];
+    return vec[0];
 }
 void setXEqualTo(int pos) {
     while (askWith(pos));
 }
 void bruteForce(std::vector<int> vec, int nearestKownPosition) {
-    int last = a[nearestKownPosition];
     setXEqualTo(nearestKownPosition);
+    int last = a[nearestKownPosition];
     for (auto it : vec) {
-        a[it] = last;
-        for (int diff = askWith(it); diff; diff = askWith(it))
-            a[it] += diff;
+        setXEqualTo(it);
+        a[it] = x;
     }
 }
 /*
@@ -93,6 +105,11 @@ int main() {
     std::cin >> T;
     while (T--) {
         std::cin >> n;
+        // <<<<< debug
+        std::cin >> x;
+        for (int i = 1; i <= n; ++i)
+            std::cin >> b[i];
+        // debug >>>>>
         std::vector<int> vec;
         for (int i = 1; i <= n; ++i)
             vec.push_back(i);
