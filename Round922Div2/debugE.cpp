@@ -95,8 +95,8 @@ void solve(std::vector<int> vec, int min, int max, int nearestKownPosition) {
 }
 
 int main() {
-    // freopen("input.txt", "r", stdin);
-    // freopen("output.txt", "w", stdout);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     std::ios::sync_with_stdio(false);
     std::cin.tie(NULL);
 

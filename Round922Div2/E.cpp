@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <cassert>
 #define all(x) x.begin(), x.end()
 typedef int64_t ll;
 typedef std::pair<int, int> pii;
@@ -14,8 +15,7 @@ typedef long double ldb;
 const int maxn = 2e5 + 5;
 int a[maxn], n;
 int askWith(int pos) {
-    std::cout << "? " << pos << '\n';
-    std::cout.flush();
+    std::cout << "? " << pos << std::endl;
     char ch[2];
     std::cin >> ch;
     if (ch[0] == '>')
@@ -26,11 +26,11 @@ int askWith(int pos) {
         return -1;
 }
 void output() {
+    // if (n == 2) assert(false);
     std::cout << "! ";
     for (int i = 1; i <= n; ++i)
         std::cout << a[i] << ' ';
-    std::cout << "\n";
-    std::cout.flush();
+    std::cout << std::endl;
 }
 
 int randomSelect(std::vector<int> vec) {
@@ -47,6 +47,7 @@ void bruteForce(std::vector<int> vec, int nearestKownPosition) {
         for (int diff = askWith(it); diff; diff = askWith(it))
             a[it] += diff;
     }
+
 }
 /*
 记录nearestKownPosition 主要是为了尽量减少调用bruteForce时产生的询问次数。
@@ -54,12 +55,18 @@ void bruteForce(std::vector<int> vec, int nearestKownPosition) {
 void solve(std::vector<int> vec, int min, int max, int nearestKownPosition) {
     // 如果solve进行了至少一次调用，nearKownPosition就不可能为0，为0说明此时n小于等于10
     // 如果n小于10，先强制走一遍solve的流程
-    if (max - min + 1 <= 10 && nearestKownPosition) {
-        if (min > max)
-            return;
-        bruteForce(vec, nearestKownPosition);
-        return;
-    }
+
+    // <<<<< 如果不注释掉这一段，会导致TLE，但是不清楚为什么。
+    // if (max - min + 1 <= 10 && nearestKownPosition) {
+    //     if (min > max)
+    //         return;
+    //     bruteForce(vec, nearestKownPosition);
+    //     return;
+    // }
+    // >>>>>
+    // <<<<<
+    if (min > max) return;
+    // >>>>>
     int pos = randomSelect(vec);
     setXEqualTo(pos);
     std::vector<int> BiggerVec, SmallerVec;
@@ -104,3 +111,12 @@ int main() {
 
     return 0;
 }
+/*
+2 4 1 5 3
+
+x = 3
+
+2 1 
+
+x = 1
+*/
