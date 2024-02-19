@@ -51,7 +51,7 @@ int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(NULL);
 
-    for (int i = 1; i <= 7; i += 2) {
+    for (int i = 1; i <= 8; i += 2) {
         std::cout << "====== case: "<< i <<" ======\n";
         dfs(i, std::vector<int>{});
     }

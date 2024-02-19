@@ -23,6 +23,7 @@ bool check(ll limit) {
     ll segmentLength = 0;
     int head = 0;
     for (int i = 1; i <= n; ++i) {
+        // dp[i] = min{dp[j]} + a[i], 其中 j < i
         dp[i] = s.begin()->first + a[i];
         s.insert({dp[i], i});
         segmentLength += a[i];
@@ -73,3 +74,26 @@ int main() {
 
     return 0;
 }
+/*
+0 1 2 3 4 5 6 7
+    ^   ^ 
+# 1 4 5 3 3 2 #
+
+dp[0] = 0
+dp[1] = dp[0] + 1 = 1
+segment += 1
+
+limit = 3 
+
+a[1] < limit ->  dp[2] can get from dp[0]
+dp[2] = min{dp[1], dp[0]} + a[2] = 4
+
+segment += 4 -> segment = 5 > limit 
+dp[3] = dp[2] + a[3] = 9
+
+*/
+
+/*
+
+1
+*/
