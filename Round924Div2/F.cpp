@@ -15,7 +15,6 @@ const int maxN = 2e5 + 5;
 struct TreeNode {
     std::array<int, 4> basicVec;
     std::array<int, 4> sumVec;
-    
 };
 class Tree {
    public:
@@ -31,7 +30,6 @@ ll a[maxN], b[maxN];
 void update(int opt, int l, int r, int x) {
     // trees[opt].updateSelf(1, 1, trees[opt].N, l, r, x);
     // trees[opt^1].reCalculate(1, 1, trees[opt].N);
-    
 }
 ll getAns() {
     return trees[0].t[1].sum[]
