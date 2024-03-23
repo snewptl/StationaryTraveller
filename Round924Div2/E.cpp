@@ -25,7 +25,7 @@ void prepareDP() {
         for (int j = 2; sigma(j) <= i; ++j) {
             if (dp[i] > dp[i - sigma(j)] + j) {
                 dp[i] = dp[i - sigma(j)] + j;
-                lastSegment[i] = j; 
+                lastSegment[i] = j;
             }
         }
     }
@@ -33,28 +33,32 @@ void prepareDP() {
 bool solve() {
     int basic = x % y;
     s -= basic * n;
-    if (s < 0 || s % y != 0) return false;
+    if (s < 0 || s % y != 0)
+        return false;
     s /= y;
     x /= y;
     for (int i = 1; i <= n; ++i) {
         ll currentS = s - (x + x + i - 1) * i / 2;
-        if (currentS < 0) break;
+        if (currentS < 0)
+            break;
         if (i + dp[currentS] <= n) {
-            std::vector<int>vec;
-            while(currentS) {
+            std::vector<int> vec;
+            while (currentS) {
                 int start = lastSegment[currentS];
                 currentS -= sigma(start);
-                while(start) {
+                while (start) {
                     vec.push_back((start - 1) * y + basic);
                     --start;
                 }
             }
-            while(vec.size() < n - i) vec.push_back(basic);
+            while (vec.size() < n - i)
+                vec.push_back(basic);
             for (int j = i; j >= 1; --j) {
                 vec.push_back(basic + (j - 1 + x) * y);
             }
             std::reverse(all(vec));
-            for (int i = 1; i <= n; ++i) ans[i] = vec[i - 1];
+            for (int i = 1; i <= n; ++i)
+                ans[i] = vec[i - 1];
             return true;
         }
     }
@@ -73,7 +77,8 @@ int main() {
         std::cin >> n >> x >> y >> s;
         if (solve()) {
             std::cout << "YES\n";
-            for (int i = 1; i <= n; ++i) std::cout << ans[i] << ' ';
+            for (int i = 1; i <= n; ++i)
+                std::cout << ans[i] << ' ';
             std::cout << '\n';
         } else {
             std::cout << "NO\n";
